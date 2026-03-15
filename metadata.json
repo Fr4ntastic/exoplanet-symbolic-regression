@@ -1,0 +1,20 @@
+{
+  "script": "analyze_results.py",
+  "timestamp": "2026-03-15T21:31:51.787421",
+  "git_commit": "n/d",
+  "python": "3.12.3",
+  "numpy": "2.4.3",
+  "pandas": "2.3.3",
+  "sklearn": "1.8.0",
+  "pysr": "1.5.9",
+  "n_boot": 200,
+  "rng_seed": 42,
+  "split_year": 2022,
+  "data_csv": "exoplanets_filtrati.csv",
+  "csv_md5": "141f1d6584fc0b22c8cc8b177cdcd06d",
+  "note_bootstrap_memory": "Bootstrap vettorizzato crea matrici (n_boot x n) in memoria. Con n_boot=1000 e n<5000 e' velocissimo e sicuro. Se il dataset cresce oltre 50k righe, sostituire con loop a chunk.",
+  "note_bootstrap": "residual bootstrap: assume errori i.i.d.; pair bootstrap: non assume i.i.d.; BCa: corregge bias+accelerazione via jackknife (fallback a pair se instabile); wild bootstrap: usato automaticamente se Breusch-Pagan p<0.05",
+  "note_clip_logRp": "logRp clippato in [-5, 10] prima di exp() per evitare overflow. log(25 R_terra)~3.2, log(0.05 R_terra)~-3.0: il range [-5,10] copre tutto il fisicamente plausibile con ampio margine.",
+  "note_nasa_query": "Dati: NASA Exoplanet Archive, tabella pscomppars. Citare: NASA Exoplanet Archive (https://exoplanetarchive.ipac.caltech.edu). Data query: vedi timestamp sopra.",
+  "note_pvalue": "p-value permutation approssimativo (usa media checkpoint). Citare solo come sanity check qualitativo nel paper."
+}
