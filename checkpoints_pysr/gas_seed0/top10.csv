@@ -1,0 +1,11 @@
+complexity,loss,equation,score,sympy_format,lambda_format
+1,0.08250245,2.4986923,0.0,2.49869230000000,PySRFunction(X=>2.49869230000000)
+3,0.06851982,logMp ^ 0.5150403,0.09285247169357254,logMp**0.5150403,PySRFunction(X=>logMp**0.5150403)
+4,0.05184461,log(logF + logMp),0.27887207092289884,log(logF + logMp),PySRFunction(X=>log(logF + logMp))
+5,0.042975307,(0.8680573 ^ logMp) * logMp,0.18762528062775444,0.8680573**logMp*logMp,PySRFunction(X=>0.8680573**logMp*logMp)
+7,0.03877454,((1.2308915 ^ logF) + logMp) ^ 0.411042,0.05143092462667285,(1.2308915**logF + logMp)**0.411042,PySRFunction(X=>(1.2308915**logF + logMp)**0.411042)
+8,0.036185414,(-3.2062652 / logMp) + log(logF + 16.00811),0.06910773622068186,log(logF + 16.00811) - 3.2062652/logMp,PySRFunction(X=>log(logF + 16.00811) - 3.2062652/logMp)
+9,0.03145861,logMp * (((logF * 0.00308879) + 0.85000783) ^ logMp),0.13998339589316747,logMp*(logF*0.00308879 + 0.85000783)**logMp,PySRFunction(X=>logMp*(logF*0.00308879 + 0.85000783)**logMp)
+10,0.02963586,((log(logMp) + (1.0081838 ^ logF)) ^ 2.0606074) - logMp,0.05968759900548353,-logMp + (1.0081838**logF + log(logMp))**2.0606074,PySRFunction(X=>-logMp + (1.0081838**logF + log(logMp))**2.0606074)
+11,0.027896686,(-34.165157 - (logMp * -2.63222)) * (logMp / (logF + -48.320187)),0.06047721414866097,logMp*(-(-2.63222)*logMp - 34.165157)/(logF - 48.320187),PySRFunction(X=>logMp*(-(-2.63222)*logMp - 34.165157)/(logF - 48.320187))
+13,0.025782583,(0.726301 - (logMp * 0.054575592)) * (logMp - ((1.4538541 ^ logF) * -0.045961965)),0.03940435698474386,(0.726301 - 0.054575592*logMp)*(-(-0.045961965)*1.4538541**logF + logMp),PySRFunction(X=>(0.726301 - 0.054575592*logMp)*(-(-0.045961965)*1.4538541**logF + logMp))
