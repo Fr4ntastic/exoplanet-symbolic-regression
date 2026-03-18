@@ -29,7 +29,6 @@ exoplanet-symbolic-regression/
 │   ├── sub_nep_seed0/             # Best seed for sub-Neptunes
 │   ├── sub_terr_seed0/            # Best seed for sub-terrestrials
 │   ├── rocky_SE_seed123/          # Best seed for rocky/super-Earths
-│   └── permutation_*/             # Permutation test runs
 │
 ├── run_sr.py                      # Main pipeline: data download, filtering,
 │                                  # feature engineering, PySR search (3 seeds),
@@ -76,7 +75,7 @@ python3 run_sr.py
 
 This downloads the NASA Exoplanet Archive catalogue, applies quality filters, runs PySR with 3 random seeds for each of the 4 planetary groups, evaluates all models on held-out test sets, and saves trained model checkpoints to `checkpoints_pysr/`.
 
-> ⚠️ **Runtime warning**: the full pipeline takes approximately 2–4 hours on 8 CPU cores. Set `PILOT = True` at the top of `run_sr.py` for a fast smoke test (≈ 5 minutes, reduced iterations).
+> ⚠️ **Runtime warning**: the full pipeline takes approximately one day on 8 CPU cores. Set `PILOT = True` at the top of `run_sr.py` for a fast smoke test (≈ 5 minutes, reduced iterations).
 
 The script supports checkpointing: if interrupted, it resumes from the last completed seed.
 
