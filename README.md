@@ -7,52 +7,47 @@ fcancell06@gmail.com
 
 ---
 
-## Overview
-
-This repository contains all analysis scripts, trained model checkpoints,
-and derived data tables for the paper:
+## Paper
 
 > **"A symbolic regression mass–radius–irradiation relation for transiting
 > gas giants: temporal validation and comparison with the state of the art"**
 > F. D. Cancello, submitted to *Astronomy & Astrophysics* (2026)
 
-**Main result:** The symbolic regression formula
+### Main result
 
 ```
-ln(Rp/R⊕) = 0.0567 * [ln(F/F⊕) - ln(Mp/M⊕) * (ln(Mp/M⊕) - 12.64)]
+ln(Rp/R⊕) = 0.0567 × [ln(F/F⊕) − ln(Mp/M⊕) × (ln(Mp/M⊕) − 12.64)]
 ```
 
-achieves R²=0.642 on 236 gas giants discovered after 2022
-(never used in any stage of model development), outperforming all
-existing mass-only empirical relations under a consistent calibration
-protocol.
+- **R² = 0.642** on 236 gas giants discovered after 2022 (never seen during training)
+- **ΔR² = +0.526** vs best existing model (Sousa et al. 2024)
+- Generalisation gap **Δg = −0.016** (no overfitting)
+- Bootstrap 95% CI: α = 0.0571⁺⁰·⁰⁰³⁵₋₀.₀₀₃₂, β = 12.65⁺⁰·⁴⁷₋₀.₄₄
 
-**Valid domain:** 0.3 ≲ Mp/MJup ≲ 30, 4 ≤ Rp/R⊕ ≤ 24,
-irradiation 1 ≲ F/F⊕ ≲ 10⁵.
+**Valid domain:** 0.3 ≲ Mp/MJup ≲ 30, 4 ≤ Rp/R⊕ ≤ 24, 1 ≲ F/F⊕ ≲ 10⁵
 
 ---
 
-## Repository Structure
+## Repository contents
 
-```
-├── run_gassosi_pre2022.py       # Main PySR run (gas giants, pre-2022 training)
-├── analisi_residui.py           # Residual analysis
-├── test_nuova_legge.py          # Hybrid model test
-├── valuta_formule_pre2022.py    # Evaluate all HoF formulas on post-2022 test
-├── confronto_letteratura.py     # Comparison with literature models
-├── bootstrap_coeffs.py          # Bootstrap CI for coefficients
-├── collect_data.py              # NASA Archive data collection
-├── results_gas_pre2022.csv      # PySR results (3 seeds)
-├── tutte_formule_pre2022_r2.csv # R² for all Hall-of-Fame formulas
-├── confronto_letteratura.csv    # R² comparison with literature
-├── bootstrap_results.csv        # Bootstrap samples
-├── requirements_gassosi.txt     # Dependencies
-└── README.md
-```
+| File | Description |
+|------|-------------|
+| `run_gassosi_pre2022.py` | **Main script** — PySR run on pre-2022 gas giants, evaluated on post-2022 test set |
+| `analisi_residui.py` | Residual analysis of baseline model |
+| `test_nuova_legge.py` | Hybrid model test (PySR + linear correction) |
+| `valuta_formule_pre2022.py` | Evaluate all Hall-of-Fame formulas on post-2022 test set |
+| `confronto_letteratura.py` | Comparison with Müller+2024, Sousa+2024, CK17, Bashi+2017 |
+| `bootstrap_coeffs.py` | Bootstrap confidence intervals for α and β |
+| `collect_data.py` | NASA Exoplanet Archive data collection |
+| `results_gas_pre2022.csv` | PySR results (3 seeds, pre-2022 training) |
+| `tutte_formule_pre2022_r2.csv` | R² for all Hall-of-Fame formulas on post-2022 test |
+| `confronto_letteratura.csv` | R² comparison with literature models |
+| `bootstrap_results.csv` | Bootstrap samples for α, β, R² |
+| `requirements_gassosi.txt` | Python/Julia dependencies |
 
 ---
 
-## How to Reproduce
+## How to reproduce
 
 ### 1. Install dependencies
 
@@ -62,16 +57,16 @@ pip install pysr numpy pandas scipy matplotlib sympy scikit-learn
 
 Julia is required by PySR: https://julialang.org/downloads/
 
-### 2. Run PySR (takes ~14h on 8 CPUs)
+### 2. Run PySR (~14h on 8 CPUs)
 
 ```bash
 python3 run_gassosi_pre2022.py
 ```
 
 Downloads data from NASA Exoplanet Archive automatically,
-splits at disc_year=2022 (511 training, 236 test), runs 3 seeds.
+splits at `disc_year = 2022` (511 training, 236 test), runs 3 seeds.
 
-### 3. Evaluate formulas on post-2022 test set
+### 3. Evaluate all Hall-of-Fame formulas
 
 ```bash
 python3 valuta_formule_pre2022.py
@@ -91,25 +86,25 @@ python3 bootstrap_coeffs.py
 
 ---
 
-## Main Formula
+## Use the formula
 
 ```python
 import numpy as np
 
 def predict_radius(Mp_earth, F_solar):
     """
-    Predict ln(Rp/R_earth) for gas giant exoplanets.
+    Predict ln(Rp/R_earth) for transiting gas giants.
 
     Parameters
     ----------
-    Mp_earth : float or array — planetary mass in Earth masses
-    F_solar  : float or array — irradiation in units of Earth's flux
+    Mp_earth : float or array  — planetary mass in Earth masses
+    F_solar  : float or array  — irradiation flux in Earth flux units (F⊕ ≈ 1361 W/m²)
 
     Returns
     -------
     logRp : ln(Rp/R_earth)
 
-    Valid: 0.3 ≲ Mp/MJup ≲ 30,  F/F_earth ≲ 1e5
+    Valid: 0.3 ≲ Mp/MJup ≲ 30,  F/F⊕ ≲ 1e5
     """
     alpha = 0.056739  # 95% CI: [0.0539, 0.0607]
     beta  = 12.642    # 95% CI: [12.21, 13.12]
@@ -117,20 +112,25 @@ def predict_radius(Mp_earth, F_solar):
     logF  = np.log(F_solar)
     return alpha * (logF - logMp * (logMp - beta))
 
-# Example: Jupiter (318 M_earth) at 0.05 AU, F ~ 400 F_earth
-print(f"Predicted: {np.exp(predict_radius(318, 400)):.2f} R_earth")
+# Example: Jupiter-mass planet (318 M⊕) at F = 400 F⊕
+Rp = np.exp(predict_radius(318, 400))
+print(f"Predicted radius: {Rp:.2f} R⊕")
 ```
 
 ---
 
 ## Data
 
-Retrieved from [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/)
-(pscomppars table) on 2026 March 30 (UTC).
+Raw data retrieved from the
+[NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/)
+(`pscomppars` table) on 2026 March 30 (UTC)
+([Akeson et al. 2013](https://doi.org/10.1086/672273);
+[Christiansen et al. 2025](https://arxiv.org/abs/2506.03299)).
 
-**Caveat:** pscomppars may include updated parameters for pre-2022 planets
-from post-2022 publications. The temporal split is a robustness check,
-not a strict causal separation. See Section 2.2 of the paper.
+**Important caveat:** `pscomppars` combines parameters from multiple
+references. The temporal split (`disc_year < 2022` for training) is a
+*robustness check*, not a strict causal separation, as updated parameters
+for pre-2022 planets may appear in post-2022 publications.
 
 ---
 
@@ -143,7 +143,7 @@ not a strict causal separation. See Section 2.2 of the paper.
              for transiting gas giants},
   journal = {Astronomy \& Astrophysics},
   year    = {2026},
-  note    = {submitted, arXiv:XXXX.XXXXX}
+  note    = {submitted}
 }
 ```
 
@@ -151,4 +151,4 @@ not a strict causal separation. See Section 2.2 of the paper.
 
 ## License
 
-MIT. See LICENSE file.
+MIT — see `LICENSE` file.
